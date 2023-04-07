@@ -6,6 +6,7 @@ ENV NODE_VERSION_MAJOR=14
 
 WORKDIR /c2s-project
 
+
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION_MAJOR}.x | bash 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - 
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list 
