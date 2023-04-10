@@ -1,1 +1,39 @@
-<%= @message.inspect %>
+<div id="message-content">
+  
+  <ul>
+    <h3> <%= @message.subject %> </h3>
+    <% if @message.lead_data.present? %>
+      <li> Nome do cliente: <%= @message.lead_data.name %></li>
+      <li> Telefone: <%= @message.lead_data.phone %></li>
+      <li> Mensagem: <%= @message.lead_data.client_message %></li>
+      <li> Veículo de interesse: <%= @message.lead_data.vehicle %></li>
+      <li> Preço: <%= @message.lead_data.vehicle_price %></li>
+      <li> Ano: <%= @message.lead_data.vehicle_year %></li>
+      <li> Link do anúncio: <%= @message.lead_data.vehicle_link %></li>
+    <% end %>
+  </ul>
+</div>
+
+<script>
+  function checkProcessed() {
+    $.ajax({
+      url: '/messages/<%= @message.id %>',
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        
+        if (data.processed) {
+          $('#message-content').html(data.content);
+        } else {
+          setTimeout(function() {
+            location.reload();
+          }, 5000);
+          setTimeout(checkProcessed, 3000);
+        }
+      }
+    });
+  }
+  checkProcessed();
+</script>
+
+
