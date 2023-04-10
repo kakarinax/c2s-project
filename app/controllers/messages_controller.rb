@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
   def create
     @message = Message.new(message_params)
     if @message.save
-      EmailParserWorker.perform_async(@message.id)
+      EmailParserJob.perform_in(1.second, @message.id)
       redirect_to @message, notice: 'Message was successfully created.'
     else
       render :new
@@ -14,7 +14,11 @@ class MessagesController < ApplicationController
   end
 
   def show
-    @message = Message.find(params[:id])
+    @message = Message.find_by(id: params[:id])
+    respond_to do |format|
+      format.html
+      format.json { render json: @message.to_json }
+    end
   end
 
   private
