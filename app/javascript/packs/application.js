@@ -9,6 +9,7 @@ import * as ActiveStorage from "@rails/activestorage"
 //= require jquery3
 //= require popper
 //= require bootstrap-sprockets
+//= require jquery_ujs
 
 Rails.start()
 Turbolinks.start()
