@@ -10,39 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_07_162655) do
+ActiveRecord::Schema.define(version: 2023_04_10_014654) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
-  create_table "eml_files", force: :cascade do |t|
-    t.string "file", null: false
+  create_table "lead_data", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "message_id", null: false
+    t.string "name"
+    t.string "phone"
+    t.string "client_message"
+    t.string "vehicle"
+    t.string "vehicle_year"
+    t.string "vehicle_link"
+    t.string "vehicle_price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["message_id"], name: "index_lead_data_on_message_id"
   end
 
-  create_table "eml_parsers", force: :cascade do |t|
-    t.string "from"
+  create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "email", null: false
     t.string "to"
-    t.string "subject"
-    t.string "body"
-    t.string "attachment"
-    t.datetime "sent_at"
-    t.datetime "received_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "messages", force: :cascade do |t|
-    t.string "subject"
     t.string "from"
-    t.string "to"
+    t.string "subject"
     t.text "body"
-    t.string "email"
-    t.string "file_name"
-    t.binary "file_data"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "processed", default: false
   end
 
+  add_foreign_key "lead_data", "messages"
 end
